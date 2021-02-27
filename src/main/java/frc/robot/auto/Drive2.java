@@ -70,30 +70,29 @@ public class Drive2 {
     private static double distOut = 0.0; // Y (Fwd) cmd
     private static double distFixedTurn = -0.50; // Fixed value for turning
 
-                 /* [0][]=hdg [1][]=dist SP, PB, DB, Mn, Mx, Xcl */
+    /* [0][]=hdg [1][]=dist SP, PB, DB, Mn, Mx, Xcl */
     private static double[][] parms = { { 0.0, -130.0, 3.0, 0.4, 1.0, 0.20 },
             /*                       */ { 0.0, 5.5, 0.5, 0.10, 1.0, 0.07 } };
     private static Steer steer = new Steer(parms); // Used to steer to a hdg with power for distance
 
     // Steer to heading at power for distance.
     private static int trajIdx = 0; // strCmds Index
-            
-    //dont use negative power
-    private static double traj[][] = {//{hdg, %pwr, dist}
-                                        { 0.0, 50.0, 7.0 },
-                                        //{ 0.0, 70.0, -0.4 },
-                                        { 90.0, 50.0, 7.0 },
-                                        //{ 90.0, 70.0, -0.4 },
-                                        { 45, -50.0, 1.4 * 7.0 },
-                                        //{ 225.0, 70.0, -0.4 }, 
-                                        { 90.0, 50.0, 7.0 },
-                                        //{ 90.0, 70.0, -0.4 },
-                                        { 135.0, -50.0, 1.4 * 7.0 }, 
-                                       // { -45.0, 70.0, -0.4 },
-                                        { 0, -50.0, 7.0 },
-                                        //{ -180.0, 70.0, -0.4 },
-                                        { 350.0, 50.0, 0.0 }
-                                     };
+
+    // dont use negative power
+    private static double traj[][] = { // {hdg, %pwr, dist}
+            { 0.0, 50.0, 7.0 },
+            // { 0.0, 70.0, -0.4 },
+            { 90.0, 50.0, 7.0 },
+            // { 90.0, 70.0, -0.4 },
+            { 45, -50.0, 1.4 * 7.0 },
+            // { 225.0, 70.0, -0.4 },
+            { 90.0, 50.0, 7.0 },
+            // { 90.0, 70.0, -0.4 },
+            { 135.0, -50.0, 1.4 * 7.0 },
+            // { -45.0, 70.0, -0.4 },
+            { 0, -50.0, 7.0 },
+            // { -180.0, 70.0, -0.4 },
+            { 350.0, 50.0, 0.0 } };
     // /* */ {90.0, 70.0, 5.0},
     // /* */ {-135.0, 70.0, 7.1},
     // /* */ {90.0, 70.0, 5.0},
@@ -132,7 +131,7 @@ public class Drive2 {
         if (JS_IO.drive2Arcade.onButtonPressed())
             state = 2; // GP 3, Y
         if (JS_IO.drive2AutoTest.onButtonPressed()) { // GP 4, B
-            state = 30; //TODO: should this still be 40?
+            state = 20; // TODO: should this still be 40?
             trajIdx = 0;
         }
 
@@ -176,6 +175,9 @@ public class Drive2 {
                 // hdgOut = BotMath.SegLine(hdgOut, xOutAr); //Compensate for poor turning.
                 diffDrv.arcadeDrive(JS_IO.axRightDrive.get(), hdgOut, false);
                 prvState = state;
+                break;
+            case 20:
+                diffDrv.curvatureDrive(.75, .75, false);
                 break;
             /*
              * This rotates to the heading then resets the dist. and starts running out to
